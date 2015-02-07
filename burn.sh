@@ -2,7 +2,7 @@
 #
 # Description : Easy script to burn images from terminal for OSX
 # Author      : Jose Cerrejon Gonzalez (ulysess@gmail_dot._com)
-# Version     : 0.9 (2/Feb/15)
+# Version     : 0.9.1 (7/Feb/15)
 #
 # TODO 		  : Linux compatibility incomplete
 #
@@ -28,8 +28,8 @@ function edit(){
 }
 
 function dd_osx(){
-	echo -e "Starting the process on /dev/disk1. Please be patient...\n\n"
-	# unmount disk1
+	echo -e "Starting the process on /dev/disk$DEVICE_NUMBER. Please be patient...\n\n"
+	# unmount diskX
 	echo -e "Unmounting...\n"
 	diskutil unmountDisk /dev/disk$DEVICE_NUMBER
 	# dd to /dev/rdisk1
@@ -42,7 +42,7 @@ if [ -e /dev/disk2 ]; then
 	diskutil list | grep "/dev/\|0:" | awk '{print $1,$3, $4}'
 	echo -e "Choose disk number (Example: /dev/disk1 = 1, /dev/disk2 = 2,...)\n"
 	read -p "Disk Number = " option
-	$DEVICE_NUMBER="$option"
+	DEVICE_NUMBER="$option"
 elif [ "$IMG" == "" ]; then
 	echo -e "Missing argument.\n"
 	usage
