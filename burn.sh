@@ -2,7 +2,7 @@
 #
 # Description : Easy script to burn images from terminal for OSX
 # Author      : Jose Cerrejon Gonzalez (ulysess@gmail_dot._com)
-# Version     : 0.9.2 (10/Feb/15)
+# Version     : 0.9.4 (01/Apr/15)
 #
 # TODO 		  : Linux compatibility incomplete
 #
@@ -20,8 +20,14 @@ function usage(){
 function edit(){
 	if [ -f /Volumes/boot/boot.ini ]; then
 		nano /Volumes/boot/boot.ini
+	elif [ -f /Volumes/BOOT/boot.ini ]; then
+		nano /Volumes/BOOT/boot.ini
 	elif [ -f /Volumes/boot/boot.txt ]; then
 		nano /Volumes/boot/boot.txt
+	elif [ -f /Volumes/NO\ NAME/config.txt ]; then
+		nano /Volumes/NO\ NAME/config.txt
+	elif [ -f /Volumes/Untitled/uEnv.txt ]; then
+		nano /Volumes/Untitled/uEnv.txt
 	else
 		echo "File boot not found."
 	fi
@@ -43,7 +49,7 @@ if [ -e /dev/disk2 ]; then
 	echo -e "Choose disk number (Example: /dev/disk1 = 1, /dev/disk2 = 2,...)\n"
 	read -p "Disk Number = " option
 	DEVICE_NUMBER="$option"
-	if [ "$option" == "0"]; then
+	if [ "$option" == "0" ]; then
 		echo -e "You don't want to write on device 0. Drunken mode ON. Aborting...\n"
 		exit
 	fi
