@@ -1,10 +1,11 @@
 #!/bin/bash
 #
-# Description : Easy script to burn images from terminal for OSX
+# Description : Easy script to burn images to SD/USB from terminal (OSX only)
 # Author      : Jose Cerrejon Gonzalez (ulysess@gmail_dot._com)
-# Version     : 0.9.4 (01/Apr/15)
+# Version     : 0.9.5 (21/Apr/15)
 #
 # TODO 		  : Linux compatibility incomplete
+# 				https://blog.tinned-software.net/create-bootable-usb-stick-from-iso-in-mac-os-x/
 #
 clear
 
@@ -38,9 +39,19 @@ function dd_osx(){
 	# unmount diskX
 	echo -e "Unmounting...\n"
 	diskutil unmountDisk /dev/disk$DEVICE_NUMBER
-	# dd to /dev/rdisk1
-	echo -e "\nCopying (please wait)...\n\n"
+	#If IMG is a iso image, convert it to .img before burn
+	if [ ${IMG: -4} == ".iso" ]; then 
+		hdiutil convert -format UDRW -o ./$IMG $IMG
+		mv $IMG.dmg $IMG.img
+		IMG=$IMG.img
+		echo -e "\nImage to burn: $IMG"
+	fi
+	# dd to /dev/rdiskX
+	echo -e "\nCopying (please wait)...\n"
 	sudo dd bs=1m of=/dev/rdisk$DEVICE_NUMBER if=$IMG
+	if [ ${IMG: -8} == ".iso.img" ]; then 
+		rm $IMG
+	fi
 }
 
 if [ -e /dev/disk2 ]; then
@@ -64,13 +75,13 @@ fi
 
 dd_osx
 
-echo -e "\nDone!. Do you want to (E)ject the SD, edit the (B)oot file config with nano or e(X)it?."
+echo -e "\nDone!. Do you want to (E)ject the media, edit the (B)oot file config with nano or e(X)it?."
 read -p "Choose (E/B/X)? " option
 
 case "$option" in
     e*) echo -e "\nEjecting...\n" ; diskutil eject /dev/disk$DEVICE_NUMBER ;;
     b*) edit ; diskutil eject /dev/disk$DEVICE_NUMBER ;;
-    x*) echo -e "\nRemove the SD Card & have a nice day :)\n" ;exit ;;
+    x*) echo -e "\nRemove the SD Card or USB device & have a nice day :)\n" ;exit ;;
 esac
 
 echo -e "\nFor trouble, ideas or technical support please visit http://misapuntesde.com\n"
