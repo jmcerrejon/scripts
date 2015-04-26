@@ -1,0 +1,43 @@
+# (ES) Script post-instalación para Debian
+# (EN) Debian post-installation script
+#
+# Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
+# Updated : 26/Apr/15
+# Tested  : Debian 8 Jessie (Stable) XFCE
+# Download: debian.org/CD/http-ftp/#stable 
+# Website : http://misapuntesde.com
+#
+# INSTRUCCIONES (ES)
+# 1) Instalar sudo y otorgar permisos al usuario actual con el comando (como root): sudo adduser $USER sudo
+# 2) Copiar este script a un fichero, otorgar permisos de ejecución con chmod +x post.sh y asegurarse de tener acceso a internet.
+# 3) Leer CUIDADOSAMENTE cada línea y añadir/remover el símbolo de almohadilla '#' en las acciones que necesites (salvo en los comentarios).
+# 4) Recuerda hacer backups de programas, bookmarks, configuraciones y addons de navegadores, mail ,~/.bashrc, ~/.ssh, ~/gnupg...
+# 5) Ejecutar ./post.sh
+#
+# INSTRUCTIONS (EN)
+# 1) Install sudo and add current user to sudo with the command (as root): sudo adduser $USER sudo
+# 2) Copy the script to a file and set execution priviledge with: chmod +x post.sh and make sure you have internet connection.
+# 3) Read CAREFULLY each line on this file and add/remove the '#' symbol when you need it. (keep comments).
+# 4) Remember to make backups(apps, bookmarks, config files, browsers addons, mail ,~/.bashrc, ~/.ssh, ~/gnupg…)
+# 5) Run ./post.sh
+# 
+# Script start!
+#
+# REMEMBER Install sudo and add current user to sudoers!
+#
+# Install packages
+# winff: audio & video converter
+# wine-development: Wine is a free MS-Windows API implementation
+sudo apt install -y build-essential dkms synaptic mpv git dialog mc flashplugin-nonfree
+# Remove cdrom from repos and add contrib non-free to /etc/apt/sources.list
+sudo sed -i '/cdrom/s/^/#/' /etc/apt/sources.list
+sudo sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
+sudo apt update
+# Remove packages
+sudo apt remove -y aspell aspell-en bsd-mailx ca-certificates-java java-common cups-common cups-pk-helper doc-debian docbook-xml docutils-common docutils-doc emacsen-common espeak-data libreoffice-help-en-us libreoffice-java-common libreoffice-draw libreoffice-math libreoffice-report-builder-bin libreoffice-base-drivers libreoffice-calc xfburn exfalso gimp-data xsane-common libsane libsane-common libsane-extras libsane-extras-common  xfce4-notes xfce4-notes-plugin firebird2.5-server-common firebird2.5-common-doc i965-va-driver installation-report procmail vim-common w3m wamerican xserver-xorg-input-wacom vlc-data
+sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
+# autologin using lightdm
+sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
+sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
+
+
