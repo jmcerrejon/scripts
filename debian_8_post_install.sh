@@ -43,7 +43,7 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # flashplugin-nonfree: If you don’t use Chrome
 # libreoffice-writer: Who the hell use the entire LibreOffice suite?
 #
-sudo apt install -y build-essential dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1 file-roller software-properties-common unzip p7zip curl
+sudo apt install -y build-essential dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto
 # autologin using lightdm
 sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
 sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
