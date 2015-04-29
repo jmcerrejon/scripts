@@ -3,7 +3,7 @@
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
 # Updated : 29/Apr/15
-# Tested  : Debian 8 Jessie (Stable) XFCE
+# Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
 #
@@ -25,28 +25,32 @@
 #
 # REMEMBER Install sudo and add current user to sudoers!
 #
-# Install/remove packages
+# Remove cdrom from repos and add contrib non-free to /etc/apt/sources.list
+sudo sed -i '/cdrom/s/^/#/' /etc/apt/sources.list
+sudo sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
+sudo apt update
+#
+# Remove packages
+#
+sudo apt remove -y aspell aspell-en bsd-mailx ca-certificates-java java-common cups-common cups-pk-helper doc-debian docbook-xml docutils-common docutils-doc emacsen-common espeak-data libreoffice-help-en-us libreoffice-java-common libreoffice-draw libreoffice-math libreoffice-report-builder-bin libreoffice-base-drivers libreoffice-calc xfburn exfalso gimp-data xsane-common libsane libsane-common libsane-extras libsane-extras-common  xfce4-notes xfce4-notes-plugin firebird2.5-server-common firebird2.5-common-doc i965-va-driver installation-report procmail vim-common w3m wamerican xserver-xorg-input-wacom vlc-data
+sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
+#
+# Install packages
 #
 # Optionals:
 # winff: audio & video converter
 # wine-development: Wine is a free MS-Windows API implementation
 # flashplugin-nonfree: If you don’t use Chrome
+# libreoffice-writer: Who the hell use the entire LibreOffice suite?
 #
-sudo apt install -y build-essential dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1
-# Remove cdrom from repos and add contrib non-free to /etc/apt/sources.list
-sudo sed -i '/cdrom/s/^/#/' /etc/apt/sources.list
-sudo sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
-sudo apt update
-# Remove packages
-sudo apt remove -y aspell aspell-en bsd-mailx ca-certificates-java java-common cups-common cups-pk-helper doc-debian docbook-xml docutils-common docutils-doc emacsen-common espeak-data libreoffice-help-en-us libreoffice-java-common libreoffice-draw libreoffice-math libreoffice-report-builder-bin libreoffice-base-drivers libreoffice-calc xfburn exfalso gimp-data xsane-common libsane libsane-common libsane-extras libsane-extras-common  xfce4-notes xfce4-notes-plugin firebird2.5-server-common firebird2.5-common-doc i965-va-driver installation-report procmail vim-common w3m wamerican xserver-xorg-input-wacom vlc-data
-sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
+sudo apt install -y build-essential dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1 file-roller software-properties-common unzip p7zip curl
 # autologin using lightdm
 sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
 sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
 #
 # Aditional software
 #
-# Install ATI drivers
+# Install ATI drivers (Doesn’t work wget. You must to download the package manually)
 wget http://www2.ati.com/drivers/linux/amd-catalyst-omega-14.12-linux-run-installers.zip
 unzip amd* && cd fgl*
 sudo ./amd*.run
@@ -65,8 +69,17 @@ sudo apt-get install -y  libgl1-fglrx-glx-i386
 # Docker
 sudo curl -sSL https://get.docker.com/ | sh
 sudo usermod -aG docker $USER
-# To test Docker: docker run -i -t ubuntu /bin/bash
-
+# To test Docker: sudo docker run -i -t ubuntu /bin/bash
+# Spotify
+echo "deb http://repository.spotify.com stable non-free" | sudo tee -a /etc/apt/sources.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 94558F59 
+sudo apt-get update 
+sudo apt-get install -y spotify-client
+# Sublime Text 2
+wget http://c758482.r82.cf2.rackcdn.com/Sublime%20Text%202.0.2%20x64.tar.bz2
+tar xvf Subl*
+mv Sublime\ Text\ 2 /opt/st2
+rm -rf Subl*
 #
 # Tweaks
 # 
