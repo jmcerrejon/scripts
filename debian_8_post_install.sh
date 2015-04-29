@@ -43,7 +43,7 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # flashplugin-nonfree: If you don’t use Chrome
 # libreoffice-writer: Who the hell use the entire LibreOffice suite?
 #
-sudo apt install -y build-essential dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto
+sudo apt install -y build-essential dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish
 # autologin using lightdm
 sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
 sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
@@ -58,7 +58,7 @@ sudo ./amd*.run
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 sudo apt update && sudo apt install google-chrome-stable
-# Install Steam
+# Install Steam. WARNING: Maybe the system goes unstable!
 # Guide: http://linuxconfig.org/installation-of-steam-client-on-debian-jessie-8-linux-64bit 
 wget http://media.steampowered.com/client/installer/steam.deb
 sudo dpkg -i steam.deb
@@ -93,6 +93,11 @@ sudo sh -c 'echo "OverrideGPUValidation=1" >> /etc/adobe/mms.cfg'
 sudo git clone https://github.com/NitruxSA/flattr-icons.git /usr/share/icons/flattr
 # Window decorations (extract to ~/.themes/)
 # http://ugoyak.deviantart.com/art/G-Talkie-XFCE-Window-Decorations-505068210 
+# Some usefull alias: upd, ins, reboot, halt
+sed -i "/# Alias definitions/i\alias upd='sudo apt update && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo apt-get clean && sudo apt-get autoclean'" $HOME/.bashrc
+sed -i "/# Alias definitions/i\alias reboot='sudo reboot'" $HOME/.bashrc
+sed -i "/# Alias definitions/i\alias ins='sudo apt install \$1'" $HOME/.bashrc
+sed -i "/# Alias definitions/i\alias halt='sudo halt'" $HOME/.bashrc
 # Fixes
 # Error: Can’t uninstall glx-diversions
 # Just edited the first line of the file /var/lib/dpkg/info/glx-diversions.postrm with exit 0 and apt-get remove glx-diversions
