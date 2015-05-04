@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 29/Apr/15
+# Updated : 4/May/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -42,8 +42,14 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # wine-development: Wine is a free MS-Windows API implementation
 # flashplugin-nonfree: If you don’t use Chrome
 # libreoffice-writer: Who the hell use the entire LibreOffice suite?
+# rdesktop: To connect to remote servers using RDP protocol (Windows)
+# ntfs-3g: Allow read/write NTFS partitions
+# converseen: Resize images,...
+# uget aria2: Download manager (Does not support file hoster like freerapid downloader)
+# fbreader: epub reader
+# 
 #
-sudo apt install -y build-essential dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish
+sudo apt install -y build-essential readahead autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish
 # autologin using lightdm
 sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
 sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
@@ -96,10 +102,27 @@ sudo git clone https://github.com/NitruxSA/flattr-icons.git /usr/share/icons/fla
 # Some usefull alias: upd, ins, reboot, halt
 sed -i "/# Alias definitions/i\alias upd='sudo apt update && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo apt-get clean && sudo apt-get autoclean'" $HOME/.bashrc
 sed -i "/# Alias definitions/i\alias reboot='sudo reboot'" $HOME/.bashrc
-sed -i "/# Alias definitions/i\alias ins='sudo apt install \$1'" $HOME/.bashrc
+sed -e "/# Alias definitions/i\alias ins='sudo apt install \$1'" $HOME/.bashrc
 sed -i "/# Alias definitions/i\alias halt='sudo halt'" $HOME/.bashrc
+# Grub menu to 1 second
+sudo sed -i 's/set timeout=5/set timeout=1/g' /boot/grub/grub.cfg
 # Fixes
 # Error: Can’t uninstall glx-diversions
 # Just edited the first line of the file /var/lib/dpkg/info/glx-diversions.postrm with exit 0 and apt-get remove glx-diversions
 # Error: error while loading shared libraries: libGL.so.1
 # sudo apt-get install -y libgl1-fglrx-glx
+# Allow parallel starts
+sudo sh -c 'echo "CONCURRENCY=shell" >> /etc/default/rcS'
+# Disable IPV6
+sudo sh -c 'echo "net.ipv6.conf.all.disable_ipv6=1" > /etc/sysctl.d/disableipv6.conf' && sudo sh -c 'echo 'blacklist ipv6' >> /etc/modprobe.d/blacklist' && sudo sed -i '/::/s%^%#%g' /etc/hosts
+# CPU Governor to performance
+echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+# Dash free up +1 MB RAM
+sudo dpkg-reconfigure dash -y
+# Improve writing disk & free cache blocks
+sudo sh -c "echo 'vm.swappiness=20' >> /etc/sysctl.conf"
+sudo sh -c "echo 'vm.vfs_cache_pressure=50' >> /etc/sysctl.conf"
+# enable dependency-based boot-ordering
+dpkg-reconfigure insserv
+
+
