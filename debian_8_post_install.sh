@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 4/May/15
+# Updated : 5/May/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -88,6 +88,12 @@ wget http://c758482.r82.cf2.rackcdn.com/Sublime%20Text%202.0.2%20x64.tar.bz2
 tar xvf Subl*
 mv Sublime\ Text\ 2 /opt/st2
 rm -rf Subl*
+# Oracle Java 8
+sudo sh -c 'echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list'
+sudo sh -c 'echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
+sudo apt-get update
+sudo apt-get install -y oracle-java8-installer
 #
 # Tweaks
 # 
