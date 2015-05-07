@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 5/May/15
+# Updated : 7/May/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -45,7 +45,7 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # rdesktop: To connect to remote servers using RDP protocol (Windows)
 # ntfs-3g: Allow read/write NTFS partitions
 # converseen: Resize images,...
-# uget aria2: Download manager (Does not support file hoster like freerapid downloader)
+# xfce4-screenshooter: take screenshots
 # fbreader: epub reader
 # 
 #
@@ -90,10 +90,17 @@ mv Sublime\ Text\ 2 /opt/st2
 rm -rf Subl*
 # Oracle Java 8
 sudo sh -c 'echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list'
-sudo sh -c 'echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list'
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
 sudo apt-get update
-sudo apt-get install -y oracle-java8-installer
+echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+sudo apt-get update && sudo apt-get install -y oracle-java8-installer
+# ffmpeg,mkvtoolnix, mkvtoolnix-gui (+ info: http://deb-multimedia.org/)
+wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2014.2_all.deb
+sudo dpkg -i deb-multimedia-keyring_2014.2_all.deb
+rm deb-multimedia-keyring_2014.2_all.deb
+sudo sh -c 'echo "deb http://www.deb-multimedia.org jessie main non-free" >> /etc/apt/sources.list'
+sudo sh -c 'echo "deb http://www.deb-multimedia.org jessie-backports main" >> /etc/apt/sources.list'
+sudo apt update && sudo apt install -y ffmpeg mkvtoolnix mkvtoolnix-gui
 #
 # Tweaks
 # 
