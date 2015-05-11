@@ -1,24 +1,27 @@
 #!/bin/bash
 #
-# Description : Easy script to burn images to SD/USB from terminal (OSX only)
+# Description : Easy script to burn images to SD/USB from terminal
 # Author      : Jose Cerrejon Gonzalez (ulysess@gmail_dot._com)
-# Version     : 0.9.5 (21/Apr/15)
+# Compatible  : OSX, Linux (Debian tested)
+# Version     : 0.9.7 (07/May/15)
 #
 # TODO 		  : Linux compatibility incomplete
 # 				https://blog.tinned-software.net/create-bootable-usb-stick-from-iso-in-mac-os-x/
 #
 clear
 
-DEVICE_NUMBER=1
 IMG=$1
-if [[ $(uname) == 'Linux' ]]; then OS="Linux"; else OS="OSX"; fi
+OS="OSX"
+[[ $(uname) == 'Linux' ]] && OS="Linux"
 
-function usage(){
-	echo -e "Burn images from terminal (OSX)\n===============================\n\nUsage: burn.sh [image_path]\n\nExample: ./burn.sh Downloads/myimage.img\n"
+usage()
+{
+	echo -e "Burn images from terminal\n=========================\n\nUsage: burn.sh [image_path]\n\nExample: ./burn.sh Downloads/myimage.img\n"
 	echo -e "For trouble, ideas or technical support please visit http://misapuntesde.com\n"
 }
 
-function edit(){
+edit()
+{
 	if [ -f /Volumes/boot/boot.ini ]; then
 		nano /Volumes/boot/boot.ini
 	elif [ -f /Volumes/BOOT/boot.ini ]; then
@@ -34,7 +37,21 @@ function edit(){
 	fi
 }
 
-function dd_osx(){
+dd_osx()
+{
+	DEVICE_NUMBER=1
+	if [ -e /dev/disk2 ]; then
+		echo -e "DEVICES LIST\n============\n"
+		diskutil list | grep "/dev/\|0:" | awk '{print $1,$3, $4}'
+		echo -e "\nChoose disk number (Example: /dev/disk1 = 1, /dev/disk2 = 2,...)\n"
+		read -p "Disk Number = " option
+		DEVICE_NUMBER="$option"
+		if [ "$option" == "0" ]; then
+			echo -e "You don't want to write on device 0. Drunken mode ON. Aborting...\n"
+			exit
+		fi
+	fi
+
 	echo -e "Starting the process on /dev/disk$DEVICE_NUMBER. Please be patient...\n\n"
 	# unmount diskX
 	echo -e "Unmounting...\n"
@@ -44,27 +61,71 @@ function dd_osx(){
 		hdiutil convert -format UDRW -o ./$IMG $IMG
 		mv $IMG.dmg $IMG.img
 		IMG=$IMG.img
-		echo -e "\nImage to burn: $IMG"
+		echo -e "\nImage to burn: $IMG\n"
 	fi
 	# dd to /dev/rdiskX
 	echo -e "\nCopying (please wait)...\n"
-	sudo dd bs=1m of=/dev/rdisk$DEVICE_NUMBER if=$IMG
+
+	# Android image
+	if [ $(echo $IMG1|grep 'selfinstall-odroidc') ]; then 
+		echo -e "\nDetected Android image. The process may take a long time, so please wait..\nNOTE: If fail, change your SD-to-MicroSD adapter.\n"
+		sudo dd bs=1m of=/dev/disk$DEVICE_NUMBER if=$IMG
+	else	
+	# Another one
+		sudo dd bs=4m of=/dev/rdisk$DEVICE_NUMBER if=$IMG
+	fi
+
 	if [ ${IMG: -8} == ".iso.img" ]; then 
 		rm $IMG
 	fi
 }
 
-if [ -e /dev/disk2 ]; then
-	echo -e "DEVICES LIST\n============\n"
-	diskutil list | grep "/dev/\|0:" | awk '{print $1,$3, $4}'
-	echo -e "Choose disk number (Example: /dev/disk1 = 1, /dev/disk2 = 2,...)\n"
-	read -p "Disk Number = " option
-	DEVICE_NUMBER="$option"
-	if [ "$option" == "0" ]; then
-		echo -e "You don't want to write on device 0. Drunken mode ON. Aborting...\n"
-		exit
+dd_linux()
+{
+	DEVICE_ID="sdb"
+	if [ -e /dev/sdc ]; then
+		echo -e "DEVICES LIST\n============\n"
+		sudo fdisk -l | grep -v "/dev/sda" | grep "/dev/sd\|0:" | awk '{print $1,$3}' # I don't want this method, but...
+		echo -e "Choose device (Example: /dev/sdc1 = sdc, /dev/sdd1 = sdd,...)\n"
+		read -p "Device chosen = " option
+		DEVICE_ID="$option"
+		if [ "$option" == "sda" ]; then
+			echo -e "You don't want to write on device 0. Drunken mode ON. Aborting...\n"
+			exit
+		fi
 	fi
-elif [ "$IMG" == "" ]; then
+
+	echo -e "Starting the process on /dev/$DEVICE_ID. Please be patient...\n\n"
+	# unmount (I can't find the best method for that)
+	echo -e "Unmounting...\n"
+	sudo umount /dev/${DEVICE_ID}1 /dev/${DEVICE_ID}2 > /dev/null 2>&1
+	
+	# Uncompress if the file is compressed with .xz
+	if [ ${IMG: -3} == ".xz" ]; then
+		echo -e "Uncompressing the file $IMG...\n"
+		unxz $IMG
+		IMG=${IMG%.xz}
+		echo -e "\nImage to burn: $IMG\n"
+	fi
+
+	# dd to /dev/sdX
+	# Android image
+	if [ $(echo $IMG|grep 'selfinstall-odroidc') ]; then 
+		echo -e "\nDetected Android image. The process may take a long time, so be patience..\nIf fail:\n· Change your SD-to-MicroSD adapter.\n· Make sure you uncompress the image with: unxz my-odroid-image.img.xz\n\nCopying (please wait)..\n"
+		sudo dd if=$IMG of=/dev/$DEVICE_ID bs=1M conv=fsync
+		sync;sync;sync;
+	else
+	# Another one
+	echo -e "\nCopying (please wait)...\n"
+		#sudo dd if=$IMG of=/dev/$DEVICE_ID bs=4M 
+	fi
+
+	if [ -e /usr/bin/notify-send ]; then
+		notify-send 'Image burned successfully' --icon=mail-signed-verified
+	fi
+}
+
+if [ "$IMG" == "" ]; then
 	echo -e "Missing argument.\n"
 	usage
 	exit
@@ -73,7 +134,8 @@ elif [ ! -f $IMG ]; then
 	exit
 fi
 
-dd_osx
+if [[ $(uname)=='Linux' ]]; then dd_linux ; else dd_osx ; fi
+
 
 echo -e "\nDone!. Do you want to (E)ject the media, edit the (B)oot file config with nano or e(X)it?."
 read -p "Choose (E/B/X)? " option
