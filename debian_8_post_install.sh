@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 7/May/15
+# Updated : 13/May/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -49,7 +49,7 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # fbreader: epub reader
 # 
 #
-sudo apt install -y build-essential readahead autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish
+sudo apt install -y build-essential readahead autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit libnotify-bin libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish
 # autologin using lightdm
 sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
 sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
@@ -101,6 +101,12 @@ rm deb-multimedia-keyring_2014.2_all.deb
 sudo sh -c 'echo "deb http://www.deb-multimedia.org jessie main non-free" >> /etc/apt/sources.list'
 sudo sh -c 'echo "deb http://www.deb-multimedia.org jessie-backports main" >> /etc/apt/sources.list'
 sudo apt update && sudo apt install -y ffmpeg mkvtoolnix mkvtoolnix-gui
+# TeamViewer
+sudo dpkg --add-architecture i386 ; sudo apt-get update ;
+sudo apt-get install -y libc6:i386 libgcc1:i386 libasound2:i386 libfreetype6:i386 zlib1g:i386 libsm6:i386 libxdamage1:i386 libxext6:i386 libxfixes3:i386 libxrandr2:i386 libxrender1:i386 libxtst6:i386 libjpeg62-turbo:i386 libxinerama1:i386
+wget -p ~/Downloads http://downloadeu1.teamviewer.com/download/version_10x/teamviewer_10.0.41499_amd64.deb
+sudo dpkg -i ~/Downloads/teamviewer_i386.deb
+rm ~/Downloads/teamviewer_i386.deb
 #
 # Tweaks
 # 
@@ -138,4 +144,6 @@ sudo sh -c "echo 'vm.vfs_cache_pressure=50' >> /etc/sysctl.conf"
 # enable dependency-based boot-ordering
 dpkg-reconfigure insserv
 
-
+# Interesting links:
+#
+# https://wiki.archlinux.org/index.php/Desktop_notifications 
