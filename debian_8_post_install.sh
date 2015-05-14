@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 13/May/15
+# Updated : 14/May/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -60,7 +60,7 @@ sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightd
 wget http://www2.ati.com/drivers/linux/amd-catalyst-omega-14.12-linux-run-installers.zip
 unzip amd* && cd fgl*
 sudo ./amd*.run
-# Install Chrome
+# Install Google Chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 sudo apt update && sudo apt install google-chrome-stable
@@ -68,10 +68,10 @@ sudo apt update && sudo apt install google-chrome-stable
 # Guide: http://linuxconfig.org/installation-of-steam-client-on-debian-jessie-8-linux-64bit 
 wget http://media.steampowered.com/client/installer/steam.deb
 sudo dpkg -i steam.deb
-sudo apt-get -f install
+sudo apt -f install
 sudo dpkg --add-architecture i386
 sudo apt install -y libgl1-mesa-dri:i386 libgl1-mesa-glx:i386 libc6:i386
-sudo apt-get install -y  libgl1-fglrx-glx-i386
+sudo apt install -y  libgl1-fglrx-glx-i386
 # Docker
 sudo curl -sSL https://get.docker.com/ | sh
 sudo usermod -aG docker $USER
@@ -79,8 +79,8 @@ sudo usermod -aG docker $USER
 # Spotify
 echo "deb http://repository.spotify.com stable non-free" | sudo tee -a /etc/apt/sources.list
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 94558F59 
-sudo apt-get update 
-sudo apt-get install -y spotify-client
+sudo apt update 
+sudo apt install -y spotify-client
 wget http://ftp.au.debian.org/debian/pool/main/libg/libgcrypt11/libgcrypt11_1.4.5-2+squeeze3_amd64.deb
 sudo dpkg -i libgcrypt* && rm libgcrypt*
 # Sublime Text 2
@@ -91,9 +91,9 @@ rm -rf Subl*
 # Oracle Java 8
 sudo sh -c 'echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list'
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
-sudo apt-get update
+sudo apt update
 echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-sudo apt-get update && sudo apt-get install -y oracle-java8-installer
+sudo apt update && sudo apt install -y oracle-java8-installer
 # ffmpeg,mkvtoolnix, mkvtoolnix-gui (+ info: http://deb-multimedia.org/)
 wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2014.2_all.deb
 sudo dpkg -i deb-multimedia-keyring_2014.2_all.deb
@@ -102,11 +102,16 @@ sudo sh -c 'echo "deb http://www.deb-multimedia.org jessie main non-free" >> /et
 sudo sh -c 'echo "deb http://www.deb-multimedia.org jessie-backports main" >> /etc/apt/sources.list'
 sudo apt update && sudo apt install -y ffmpeg mkvtoolnix mkvtoolnix-gui
 # TeamViewer
-sudo dpkg --add-architecture i386 ; sudo apt-get update ;
-sudo apt-get install -y libc6:i386 libgcc1:i386 libasound2:i386 libfreetype6:i386 zlib1g:i386 libsm6:i386 libxdamage1:i386 libxext6:i386 libxfixes3:i386 libxrandr2:i386 libxrender1:i386 libxtst6:i386 libjpeg62-turbo:i386 libxinerama1:i386
+sudo dpkg --add-architecture i386 ; sudo apt update ;
+sudo apt install -y libc6:i386 libgcc1:i386 libasound2:i386 libfreetype6:i386 zlib1g:i386 libsm6:i386 libxdamage1:i386 libxext6:i386 libxfixes3:i386 libxrandr2:i386 libxrender1:i386 libxtst6:i386 libjpeg62-turbo:i386 libxinerama1:i386
 wget -p ~/Downloads http://downloadeu1.teamviewer.com/download/version_10x/teamviewer_10.0.41499_amd64.deb
 sudo dpkg -i ~/Downloads/teamviewer_i386.deb
 rm ~/Downloads/teamviewer_i386.deb
+# Plank
+sudo add-apt-repository "deb http://ppa.launchpad.net/ricotz/docky/ubuntu precise main" && sudo apt update && sudo apt install plank
+# Whisker Menu
+wget http://download.opensuse.org/repositories/home:gottcode/Debian_8.0/Release.key && sudo apt-key add - < Release.key
+sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:gottcode/Debian_8.0/ /' >> /etc/apt/sources.list.d/xfce4-whiskermenu-plugin.list"
 #
 # Tweaks
 # 
@@ -129,7 +134,7 @@ sudo sed -i 's/set timeout=5/set timeout=1/g' /boot/grub/grub.cfg
 # Error: Can’t uninstall glx-diversions
 # Just edited the first line of the file /var/lib/dpkg/info/glx-diversions.postrm with exit 0 and apt-get remove glx-diversions
 # Error: error while loading shared libraries: libGL.so.1
-# sudo apt-get install -y libgl1-fglrx-glx
+# sudo apt install -y libgl1-fglrx-glx
 # Allow parallel starts
 sudo sh -c 'echo "CONCURRENCY=shell" >> /etc/default/rcS'
 # Disable IPV6
