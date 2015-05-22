@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 14/May/15
+# Updated : 22/May/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -47,7 +47,7 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # converseen: Resize images,...
 # xfce4-screenshooter: take screenshots
 # fbreader: epub reader
-# 
+# jpegoptim pngquant: image optimizers
 #
 sudo apt install -y build-essential readahead autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit libnotify-bin libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish
 # autologin using lightdm
@@ -112,6 +112,15 @@ sudo add-apt-repository "deb http://ppa.launchpad.net/ricotz/docky/ubuntu precis
 # Whisker Menu
 wget http://download.opensuse.org/repositories/home:gottcode/Debian_8.0/Release.key && sudo apt-key add - < Release.key
 sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:gottcode/Debian_8.0/ /' >> /etc/apt/sources.list.d/xfce4-whiskermenu-plugin.list"
+# Pinta
+sudo sh -c "echo 'deb http://ppa.launchpad.net/pinta-maintainers/pinta-stable/ubuntu trusty main' >> /etc/apt/sources.list"
+sudo apt update
+sudo apt install -y mono-runtime pinta
+# Lutris Installer. More info at https://lutris.net
+sudo apt install -y gvfs-backends python-xdg python-yaml
+wget -P $HOME http://lutris.net/releases/lutris_0.3.6.3_all.deb
+sudo dpkg -i $HOME/lutris_0.3.6.3_all.deb
+rm $HOME/lutris_0.3.6.3_all.deb
 #
 # Tweaks
 # 
@@ -121,6 +130,8 @@ sudo sh -c 'echo "EnableLinuxHWVideoDecode=1" >> /etc/adobe/mms.cfg'
 sudo sh -c 'echo "OverrideGPUValidation=1" >> /etc/adobe/mms.cfg'
 # Add flattr icon theme
 sudo git clone https://github.com/NitruxSA/flattr-icons.git /usr/share/icons/flattr
+# Add Numix circle icon theme (You must to get rid of master dir. I’ll fix it soon)
+#sudo wget -P /usr/share/icons https://github.com/numixproject/numix-icon-theme-circle/archive/master.zip && sudo unzip -nq $(basename $_) && sudo rm $(basename $_)
 # Window decorations (extract to ~/.themes/)
 # http://ugoyak.deviantart.com/art/G-Talkie-XFCE-Window-Decorations-505068210 
 # Some usefull alias: upd, ins, reboot, halt
