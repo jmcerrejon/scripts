@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 22/May/15
+# Updated : 23/May/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -121,6 +121,11 @@ sudo apt install -y gvfs-backends python-xdg python-yaml
 wget -P $HOME http://lutris.net/releases/lutris_0.3.6.3_all.deb
 sudo dpkg -i $HOME/lutris_0.3.6.3_all.deb
 rm $HOME/lutris_0.3.6.3_all.deb
+# Birdie (Twitter client)
+sudo apt install -y libgtksourceview-3.0-1 libpurple0 libgee2
+wget https://github.com/birdieapp/birdie/releases/download/1.1/birdie_1.1-debian_amd64.deb
+sudo dpkg -i birdie_1.1-debian_amd64.deb
+rm birdie_1.1-debian_amd64.deb
 #
 # Tweaks
 # 
@@ -137,8 +142,9 @@ sudo git clone https://github.com/NitruxSA/flattr-icons.git /usr/share/icons/fla
 # Some usefull alias: upd, ins, reboot, halt
 sed -i "/# Alias definitions/i\alias upd='sudo apt update && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo apt-get clean && sudo apt-get autoclean'" $HOME/.bashrc
 sed -i "/# Alias definitions/i\alias reboot='sudo reboot'" $HOME/.bashrc
-sed -e "/# Alias definitions/i\alias ins='sudo apt install \$1'" $HOME/.bashrc
+sed -i "/# Alias definitions/i\alias ins='sudo apt install -y '" $HOME/.bashrc
 sed -i "/# Alias definitions/i\alias halt='sudo halt'" $HOME/.bashrc
+sed -i "/# Alias definitions/i\alias rm='sudo rm -rf '" $HOME/.bashrc
 # Grub menu to 1 second
 sudo sed -i 's/set timeout=5/set timeout=1/g' /boot/grub/grub.cfg
 # Fixes
@@ -160,6 +166,7 @@ sudo sh -c "echo 'vm.vfs_cache_pressure=50' >> /etc/sysctl.conf"
 # enable dependency-based boot-ordering
 dpkg-reconfigure insserv
 
-# Interesting links:
+# Interesting links and commands:
 #
-# https://wiki.archlinux.org/index.php/Desktop_notifications 
+# https://wiki.archlinux.org/index.php/Desktop_notifications
+# Check if webcam is ok: mplayer tv:// 
