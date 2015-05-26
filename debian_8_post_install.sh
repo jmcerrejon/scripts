@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 23/May/15
+# Updated : 26/May/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -43,13 +43,12 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # flashplugin-nonfree: If you don’t use Chrome
 # libreoffice-writer: Who the hell use the entire LibreOffice suite?
 # rdesktop: To connect to remote servers using RDP protocol (Windows)
-# ntfs-3g: Allow read/write NTFS partitions
 # converseen: Resize images,...
 # xfce4-screenshooter: take screenshots
 # fbreader: epub reader
-# jpegoptim pngquant: image optimizers
+# jpegoptim pngquant: image optimizer
 #
-sudo apt install -y build-essential readahead autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit libnotify-bin libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish
+sudo apt install -y build-essential readahead autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit sshfs libnotify-bin libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish ntfs-3g
 # autologin using lightdm
 sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
 sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
@@ -126,6 +125,10 @@ sudo apt install -y libgtksourceview-3.0-1 libpurple0 libgee2
 wget https://github.com/birdieapp/birdie/releases/download/1.1/birdie_1.1-debian_amd64.deb
 sudo dpkg -i birdie_1.1-debian_amd64.deb
 rm birdie_1.1-debian_amd64.deb
+# DBeaver (MySQL GUI tool)
+wget http://dbeaver.jkiss.org/files/dbeaver_3.4.0_amd64.deb
+sudo dpkg -i dbeaver_3.4.0_amd64.deb
+rm dbeaver_3.4.0_amd64.deb
 #
 # Tweaks
 # 
