@@ -3,14 +3,14 @@
 # Description : Easy script to burn images to SD/USB from terminal
 # Author      : Jose Cerrejon Gonzalez (ulysess@gmail_dot._com)
 # Compatible  : OSX, Linux (Debian tested)
-# Version     : 0.9.7 (07/May/15)
+# Version     : 0.9.9 (27/May/15)
 #
 # TODO 		  : Linux compatibility incomplete
 # 				https://blog.tinned-software.net/create-bootable-usb-stick-from-iso-in-mac-os-x/
 #
 clear
 
-IMG=$1
+IMG="$1"
 OS="OSX"
 [[ $(uname) == 'Linux' ]] && OS="Linux"
 
@@ -30,6 +30,8 @@ edit()
 		nano /Volumes/boot/boot.txt
 	elif [ -f /Volumes/NO\ NAME/config.txt ]; then
 		nano /Volumes/NO\ NAME/config.txt
+	elif [ -f /media/$USER/BOOT/boot.ini ]; then
+		nano /media/$USER/BOOT/boot.ini
 	elif [ -f /Volumes/Untitled/uEnv.txt ]; then
 		nano /Volumes/Untitled/uEnv.txt
 	else
@@ -85,7 +87,8 @@ dd_linux()
 	DEVICE_ID="sdb"
 	if [ -e /dev/sdc ]; then
 		echo -e "DEVICES LIST\n============\n"
-		sudo fdisk -l | grep -v "/dev/sda" | grep "/dev/sd\|0:" | awk '{print $1,$3}' # I don't want this method, but...
+		grep -Eo sd[b-z]$ /proc/partitions
+		sudo fdisk -l | grep -E Disk\ /dev/sd[b-z]\+[0-9]* | awk '{print $1,$2,$3,$4}'
 		echo -e "Choose device (Example: /dev/sdc1 = sdc, /dev/sdd1 = sdd,...)\n"
 		read -p "Device chosen = " option
 		DEVICE_ID="$option"
@@ -101,10 +104,10 @@ dd_linux()
 	sudo umount /dev/${DEVICE_ID}1 /dev/${DEVICE_ID}2 > /dev/null 2>&1
 	
 	# Uncompress if the file is compressed with .xz
-	if [ ${IMG: -3} == ".xz" ]; then
+	if [ "${IMG: -3}" == ".xz" ]; then
 		echo -e "Uncompressing the file $IMG...\n"
-		unxz $IMG
-		IMG=${IMG%.xz}
+		unxz "${IMG}"
+		IMG="${IMG%.xz}"
 		echo -e "\nImage to burn: $IMG\n"
 	fi
 
@@ -112,12 +115,11 @@ dd_linux()
 	# Android image
 	if [ $(echo $IMG|grep 'selfinstall-odroidc') ]; then 
 		echo -e "\nDetected Android image. The process may take a long time, so be patience..\nIf fail:\n· Change your SD-to-MicroSD adapter.\n· Make sure you uncompress the image with: unxz my-odroid-image.img.xz\n\nCopying (please wait)..\n"
-		sudo dd if=$IMG of=/dev/$DEVICE_ID bs=1M conv=fsync
-		sync;sync;sync;
+		sudo dd if=$IMG of=/dev/$DEVICE_ID bs=1M conv=fsync && sync;sync
 	else
 	# Another one
 	echo -e "\nCopying (please wait)...\n"
-		#sudo dd if=$IMG of=/dev/$DEVICE_ID bs=4M 
+		sudo dd if=$IMG of=/dev/$DEVICE_ID bs=4M && sync
 	fi
 
 	if [ -e /usr/bin/notify-send ]; then
