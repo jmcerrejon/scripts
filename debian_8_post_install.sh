@@ -9,14 +9,14 @@
 #
 # INSTRUCCIONES (ES)
 # 1) Instalar sudo y otorgar permisos al usuario actual con el comando (como root): adduser your_user sudo
-# 2) Copiar este script a un fichero, otorgar permisos de ejecución con chmod +x post.sh y asegurarse de tener acceso a internet.
-# 3) Leer CUIDADOSAMENTE cada línea y añadir/remover el símbolo de almohadilla '#' en las acciones que necesites (salvo en los comentarios).
+# 2) Copiar este script a un fichero post.sh, otorgar permisos de ejecución con chmod +x post.sh y asegurarse de tener acceso a internet.
+# 3) Leer CUIDADOSAMENTE cada línea (no son muchas) y añadir/remover el símbolo de almohadilla '#' en las acciones que necesites (salvo en los comentarios).
 # 4) Recuerda hacer backups de programas, bookmarks, configuraciones y addons de navegadores, mail ,~/.bashrc, ~/.ssh, ~/gnupg...
 # 5) Ejecutar ./post.sh
 #
 # INSTRUCTIONS (EN)
 # 1) Install sudo and add current user to sudo with the command (as root): adduser your_user sudo
-# 2) Copy the script to a file and set execution priviledge with: chmod +x post.sh and make sure you have internet connection.
+# 2) Copy the script to a file called post.sh and set execution priviledge with: chmod +x post.sh and make sure you have internet connection.
 # 3) Read CAREFULLY each line on this file and add/remove the '#' symbol when you need it. (keep comments).
 # 4) Remember to make backups(apps, bookmarks, config files, browsers addons, mail ,~/.bashrc, ~/.ssh, ~/gnupg…)
 # 5) Run ./post.sh
