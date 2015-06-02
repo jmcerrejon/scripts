@@ -3,7 +3,7 @@
 # Description : Easy script to burn images to SD/USB from terminal
 # Author      : Jose Cerrejon Gonzalez (ulysess@gmail_dot._com)
 # Compatible  : OSX, Linux (Debian tested)
-# Version     : 0.9.9 (27/May/15)
+# Version     : 0.9.9 (02/Jun/15)
 #
 # TODO 		  : Linux compatibility incomplete
 # 				https://blog.tinned-software.net/create-bootable-usb-stick-from-iso-in-mac-os-x/
@@ -84,8 +84,9 @@ dd_osx()
 
 dd_linux()
 {
-	DEVICE_ID="sdb"
-	if [ -e /dev/sdc ]; then
+	if [[ $(grep -c sd[b-z]$ /proc/partitions) -eq 1 ]]; then
+		DEVICE_ID="$(grep -Eo sd[b-z]$ /proc/partitions)"
+	else
 		echo -e "DEVICES LIST\n============\n"
 		grep -Eo sd[b-z]$ /proc/partitions
 		sudo fdisk -l | grep -E Disk\ /dev/sd[b-z]\+[0-9]* | awk '{print $1,$2,$3,$4}'
@@ -93,12 +94,12 @@ dd_linux()
 		read -p "Device chosen = " option
 		DEVICE_ID="$option"
 		if [ "$option" == "sda" ]; then
-			echo -e "You don't want to write on device 0. Drunken mode ON. Aborting...\n"
-			exit
+				echo -e "You don't want to write on device 0. Drunken mode ON. Aborting...\n"
+				exit 0
 		fi
 	fi
 
-	echo -e "Starting the process on /dev/$DEVICE_ID. Please be patient...\n\n"
+	echo -e "Starting the process on /dev/$DEVICE_ID. Be patient...\n\n"
 	# unmount (I can't find the best method for that)
 	echo -e "Unmounting...\n"
 	sudo umount /dev/${DEVICE_ID}1 /dev/${DEVICE_ID}2 > /dev/null 2>&1
