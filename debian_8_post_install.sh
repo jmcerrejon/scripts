@@ -2,21 +2,21 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 26/May/15
+# Updated : 02/Jun/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
 #
 # INSTRUCCIONES (ES)
 # 1) Instalar sudo y otorgar permisos al usuario actual con el comando (como root): adduser your_user sudo
-# 2) Copiar este script a un fichero post.sh, otorgar permisos de ejecución con chmod +x post.sh y asegurarse de tener acceso a internet.
-# 3) Leer CUIDADOSAMENTE cada línea (no son muchas) y añadir/remover el símbolo de almohadilla '#' en las acciones que necesites (salvo en los comentarios).
+# 2) Copiar este script a un fichero, otorgar permisos de ejecución con chmod +x post.sh y asegurarse de tener acceso a internet.
+# 3) Leer CUIDADOSAMENTE cada línea y añadir/remover el símbolo de almohadilla '#' en las acciones que necesites (salvo en los comentarios).
 # 4) Recuerda hacer backups de programas, bookmarks, configuraciones y addons de navegadores, mail ,~/.bashrc, ~/.ssh, ~/gnupg...
 # 5) Ejecutar ./post.sh
 #
 # INSTRUCTIONS (EN)
 # 1) Install sudo and add current user to sudo with the command (as root): adduser your_user sudo
-# 2) Copy the script to a file called post.sh and set execution priviledge with: chmod +x post.sh and make sure you have internet connection.
+# 2) Copy the script to a file and set execution priviledge with: chmod +x post.sh and make sure you have internet connection.
 # 3) Read CAREFULLY each line on this file and add/remove the '#' symbol when you need it. (keep comments).
 # 4) Remember to make backups(apps, bookmarks, config files, browsers addons, mail ,~/.bashrc, ~/.ssh, ~/gnupg…)
 # 5) Run ./post.sh
@@ -26,8 +26,18 @@
 # REMEMBER Install sudo and add current user to sudoers!
 #
 # Remove cdrom from repos and add contrib non-free to /etc/apt/sources.list
-sudo sed -i '/cdrom/s/^/#/' /etc/apt/sources.list
-sudo sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
+#sudo sed -i '/cdrom/s/^/#/' /etc/apt/sources.list
+#sudo sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
+# Best repos you can find (Spain & Europe)
+FILE="\n
+deb http://ftp.fr.debian.org/debian jessie main contrib non-free\n
+deb http://ftp.fr.debian.org/debian jessie-updates main contrib non-free\n
+deb http://ftp.fr.debian.org/debian jessie-backports main contrib non-free\n
+deb http://security.debian.org jessie/updates main contrib non-free\n
+deb http://www.deb-multimedia.org jessie main non-free\n
+deb http://www.deb-multimedia.org/ jessie-backports main\n
+"
+sudo echo -e $FILE > /etc/apt/sources.list
 sudo apt update
 #
 # Remove packages
@@ -47,8 +57,9 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # xfce4-screenshooter: take screenshots
 # fbreader: epub reader
 # jpegoptim pngquant: image optimizer
+# mediainfo: Info about media files
 #
-sudo apt install -y build-essential readahead autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit sshfs libnotify-bin libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish ntfs-3g
+sudo apt install -y build-essential readahead preload autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit sshfs libnotify-bin libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish ntfs-3g
 # autologin using lightdm
 sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
 sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
@@ -56,9 +67,15 @@ sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightd
 # Aditional software
 #
 # Install ATI drivers (Doesn’t work wget. You must to download the package manually)
-wget http://www2.ati.com/drivers/linux/amd-catalyst-omega-14.12-linux-run-installers.zip
-unzip amd* && cd fgl*
-sudo ./amd*.run
+#
+# Method 1
+sudo aptitude -r install linux-headers-$(uname -r|sed 's,[^-]*-[^-]*-,,') fglrx-driver
+sudo aticonfig --initial
+#
+# Method 2
+#wget http://www2.ati.com/drivers/linux/amd-catalyst-omega-14.12-linux-run-installers.zip
+#unzip amd* && cd fgl*
+#sudo ./amd*.run
 # Install Google Chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
