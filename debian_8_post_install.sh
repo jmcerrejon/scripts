@@ -2,7 +2,7 @@
 # (EN) Debian post-installation script
 #
 # Author  : Jose Manuel Cerrejon Gonzalez (ulysess _at._ gmail _.dot_ com)
-# Updated : 02/Jun/15
+# Updated : 07/Jun/15
 # Tested  : Debian 8 Jessie (Stable) XFCE 64 bits
 # Download: debian.org/CD/http-ftp/#stable 
 # Website : http://misapuntesde.com
@@ -38,6 +38,10 @@ deb http://www.deb-multimedia.org jessie main non-free\n
 deb http://www.deb-multimedia.org/ jessie-backports main\n
 "
 sudo echo -e $FILE > /etc/apt/sources.list
+wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2014.2_all.deb
+sudo dpkg -i deb-multimedia-keyring_2014.2_all.deb
+rm deb-multimedia-keyring_2014.2_all.deb
+
 sudo apt update
 #
 # Remove packages
@@ -59,7 +63,7 @@ sudo apt upgrade && sudo apt-get -y autoremove && sudo apt-get autoclean
 # jpegoptim pngquant: image optimizer
 # mediainfo: Info about media files
 #
-sudo apt install -y build-essential readahead preload autoconf2.13 dkms synaptic mpv git dialog mc htop libcurl3 clipit sshfs libnotify-bin libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish ntfs-3g
+sudo apt install -y build-essential readahead preload autoconf2.13 dkms synaptic mpv git dialog mc htop udisks libcurl3 clipit sshfs libnotify-bin libappindicator1 file-roller software-properties-common unzip p7zip curl ristretto catfish ntfs-3g
 # autologin using lightdm
 sudo sed -i 's/#autologin-user=/autologin-user='$USER'/g' /etc/lightdm/lightdm.conf
 sudo sed -i 's/#autologin-user-timeout=0/autologin-user-timeout=0/g' /etc/lightdm/lightdm.conf
@@ -146,6 +150,13 @@ rm birdie_1.1-debian_amd64.deb
 wget http://dbeaver.jkiss.org/files/dbeaver_3.4.0_amd64.deb
 sudo dpkg -i dbeaver_3.4.0_amd64.deb
 rm dbeaver_3.4.0_amd64.deb
+# XFCE 4.12
+sudo sh -c "echo 'deb http://main.mepis-deb.org/mepiscr/repo/ mepis12cr main' >> /etc/apt/sources.list.d/xfce.list"
+wget http://teharris.net/m12repo.asc
+su -c "apt-key add m12repo.asc"
+rm m12repo.asc
+sudo apt-get update && sudo apt-get dist-upgrade -y --force-yes
+sudo ln -s /usr/lib/x86_64-linux-gnu/libxfce4util.so.7 /usr/lib/x86_64-linux-gnu/libxfce4util.so.6
 #
 # Tweaks
 # 
