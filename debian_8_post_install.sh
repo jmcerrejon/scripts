@@ -132,6 +132,7 @@ sudo add-apt-repository "deb http://ppa.launchpad.net/ricotz/docky/ubuntu precis
 # Whisker Menu
 wget http://download.opensuse.org/repositories/home:gottcode/Debian_8.0/Release.key && sudo apt-key add - < Release.key
 sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:gottcode/Debian_8.0/ /' >> /etc/apt/sources.list.d/xfce4-whiskermenu-plugin.list"
+sudo apt-get install -y xfce4-whiskermenu-plugin
 # Pinta
 sudo sh -c "echo 'deb http://ppa.launchpad.net/pinta-maintainers/pinta-stable/ubuntu trusty main' >> /etc/apt/sources.list"
 sudo apt update
@@ -150,13 +151,22 @@ rm birdie_1.1-debian_amd64.deb
 wget http://dbeaver.jkiss.org/files/dbeaver_3.4.0_amd64.deb
 sudo dpkg -i dbeaver_3.4.0_amd64.deb
 rm dbeaver_3.4.0_amd64.deb
-# XFCE 4.12
-sudo sh -c "echo 'deb http://main.mepis-deb.org/mepiscr/repo/ mepis12cr main' >> /etc/apt/sources.list.d/xfce.list"
-wget http://teharris.net/m12repo.asc
-su -c "apt-key add m12repo.asc"
-rm m12repo.asc
-sudo apt-get update && sudo apt-get dist-upgrade -y --force-yes
-sudo ln -s /usr/lib/x86_64-linux-gnu/libxfce4util.so.7 /usr/lib/x86_64-linux-gnu/libxfce4util.so.6
+# XFCE 4.12 (unestable!!)
+#sudo sh -c "echo 'deb http://main.mepis-deb.org/mepiscr/repo/ mepis12cr main' >> /etc/apt/sources.list.d/xfce.list"
+#wget http://teharris.net/m12repo.asc
+#su -c "apt-key add m12repo.asc"
+#rm m12repo.asc
+#sudo apt-get update && sudo apt-get dist-upgrade -y --force-yes
+#sudo ln -s /usr/lib/x86_64-linux-gnu/libxfce4util.so.7 /usr/lib/x86_64-linux-gnu/libxfce4util.so.6
+# Gnome Shell
+#
+# Alternate software (included in the next line)
+# shutter: screen capture
+# shotwell: image editor/viewer
+# sagasu: find strings
+# diodon: clipboard manager
+# terminator: shell
+sudo apt-get install -y gnome-shell blueman brightside diodon gedit gedit-plugins gnome-system-monitor terminator nautilus nautilus-scripts-manager sagasu shotwell shutter gnome-tweak-tool dconf-editor
 #
 # Tweaks
 # 
@@ -201,3 +211,5 @@ dpkg-reconfigure insserv
 #
 # https://wiki.archlinux.org/index.php/Desktop_notifications
 # Check if webcam is ok: mplayer tv:// 
+# Command to switch between desktop manager (gdm, lightdm,..): sudo dpkg-reconfigure gdm
+
