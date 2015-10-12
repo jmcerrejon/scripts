@@ -3,7 +3,7 @@
 # Description : Easy script to burn images to SD/USB from terminal
 # Author      : Jose Cerrejon Gonzalez (ulysess@gmail_dot._com)
 # Compatible  : OSX, Linux (Debian tested)
-# Version     : 0.9.9 (02/Jun/15)
+# Version     : 0.9.9.1 (12/Oct/15)
 #
 # TODO 		  : Linux compatibility incomplete
 # 				https://blog.tinned-software.net/create-bootable-usb-stick-from-iso-in-mac-os-x/
@@ -11,7 +11,7 @@
 clear
 
 IMG="$1"
-OS="OSX"
+OS="Darwin"
 [[ $(uname) == 'Linux' ]] && OS="Linux"
 
 usage()
@@ -137,7 +137,7 @@ elif [ ! -f $IMG ]; then
 	exit
 fi
 
-if [[ $(uname)=='Linux' ]]; then dd_linux ; else dd_osx ; fi
+if [[ $(uname) == 'Linux' ]]; then dd_linux ; else dd_osx ; fi
 
 
 echo -e "\nDone!. Do you want to (E)ject the media, edit the (B)oot file config with nano or e(X)it?."
