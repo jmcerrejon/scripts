@@ -8,10 +8,13 @@
 # /^$/d - blank lines
 # s/<!--.*// - Comments on .html
 #
-find . -type f ! -path "./widgets/*" -regex ".*\.\(js\|html\)" | while read file; do
+if [ "$1" != "" ]; then
+    find $1 -type f ! -path "./widgets/*" -regex ".*\.\(js\|html\)" | while read file; do
         ORIG_DATE=$(stat -c %y $file)
         sed -i 's/\/\/.*//;/^$/d;s/<!--.*//' $file
         touch -d "${ORIG_DATE}" $file
-done
-
-echo "Done!"
+    done
+    echo "Done!"
+else
+    echo -e "Please, you must specify a directory. Example: $0 project_dir/\n"
+fi
