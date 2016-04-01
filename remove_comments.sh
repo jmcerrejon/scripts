@@ -6,7 +6,7 @@
 # s/<!--.*// - Comments on .html
 #
 find . -type f ! -path "./widgets/*" -regex ".*\.\(js\|html\)" | while read file; do
-        ORIG_DATE=$(stat $file | grep ^Mod | awk '{print $2,$3,$4}')
+        ORIG_DATE=$(stat -c %z $file)
         sed -i 's/\/\/.*//;/^$/d;s/<!--.*//' $file
         touch -d "${ORIG_DATE}" $file
 done
