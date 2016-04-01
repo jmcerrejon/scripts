@@ -11,4 +11,4 @@ find . -type f ! -path "./widgets/*" -regex ".*\.\(js\|html\)" | while read file
         touch -d "${ORIG_DATE}" $file
 done
 
-Echo "Done!"
+echo "Done!"
