@@ -4,7 +4,7 @@
 #
 # Note: only js and html and excluding /widgets dir. Preserve the original modif. and access timestamp:
 # The next regex delete (separated by ;):
-# s/\/\/.*// - Comments on .js 
+# s/[^:]\/\/.*//;s/^\/\/.*// - Comments on .js 
 # /^$/d - blank lines
 # s/<!--.*// - Comments on .html
 #
