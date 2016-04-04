@@ -11,7 +11,7 @@
 if [ "$1" != "" ]; then
     find $1 -type f ! -path "./widgets/*" -regex ".*\.\(js\|html\)" | while read file; do
         ORIG_DATE=$(stat -c %y $file)
-        sed -i 's/\/\/.*//;/^$/d;s/<!--.*//' $file
+        sed -i 's/[^:]\/\/.*//;s/^\/\/.*//;s/<!--.*//;/^$/d' $file
         touch -d "${ORIG_DATE}" $file
     done
     echo "Done!"
